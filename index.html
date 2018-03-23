@@ -32,6 +32,10 @@
         color: lightgray;
       }
 
+      .no-margin ul {
+        margin: 0;
+      }
+
       pre {
         border-left: 0.4em solid #d7d7d7;
         padding: 1em !important;
@@ -58,12 +62,16 @@
         margin-left: 1em;
       }
       .pushdown {
-        margin-top: 5em;
+        margin-top: 12em;
       }
+      .ima img {
+        width: 400px;
+      }
+
       /* Two-column layout */
       .left-column {
         color: #777;
-        width: 20%;
+        width: 25%;
         height: 92%;
         float: left;
       }
@@ -71,7 +79,7 @@
         color: #000;
       }
       .right-column {
-        width: 75%;
+        width: 70%;
         float: right;
         padding-top: 1em;
       }
@@ -83,10 +91,732 @@ class: center, middle, inverse
 
 # Introducing : Elixir
 
-### by [Bastien](http://github.com/BastienDuplessier) 
+### by [Bastien](http://github.com/BastienDuplessier)
 
 ---
-layout: false
+class: center, middle
+
+## Slides
+### [http://bastienduplessier.github.com/munchkin](http://bastienduplessier.github.com/munchkin)
+
+## Code
+### [http://github.com/BastienDuplessier/munchkin](http://github.com/BastienDuplessier/munchkin)
+
+---
+name: default
+layout: true
+task: &nbsp;
+
+.task[{{task}}]
+
+---
+class: center, middle, inverse
+
+# Elixir ??
+
+---
+.left-column[
+  ### What is it ?
+]
+.right-column.pushdown[
+  .pre[
+    Elixir is a dynamic, functional language designed for building scalable and maintainable applications.
+  ]
+]
+
+---
+.left-column[
+  ### What is it ?
+]
+.right-column.pushdown[
+  .old.pre[
+    Elixir is a dynamic, functional language designed for building scalable and maintainable applications.
+  ]
+  .pre[
+    Elixir leverages the Erlang VM, known for running low-latency, distributed and fault-tolerant systems, while also being successfully used in web development and the embedded software domain.
+  ]
+]
+---
+.left-column[
+  ### What is it ?
+]
+.right-column.pushdown[
+  .old.pre[
+    Elixir is a dynamic, functional language designed for building scalable and maintainable applications.
+  ]
+  .old.pre[
+    Elixir leverages the Erlang VM, known for running low-latency, distributed and fault-tolerant systems, while also being successfully used in web development and the embedded software domain.
+  ]
+  .a.right.pre[
+    https://elixir-lang.org/
+  ]
+]
+
+---
+class: center, middle, inverse
+
+# Scalability
+
+---
+.left-column[
+### Scalability
+]
+.right-column[
+- Lightweight threads
+]
+---
+.left-column[
+### Scalability
+]
+
+.right-column[
+.old[
+- Lightweight threads
+]
+- Easy to use
+]
+---
+.left-column[
+### Scalability
+]
+
+.right-column[
+.old[
+- Lightweight threads
+]
+.old[
+- Easy to use
+]
+- Can spawn hundred of thousands
+]
+---
+.left-column[
+### Scalability
+]
+
+.right-column[
+.old[
+- Lightweight threads
+]
+.old[
+- Easy to use
+]
+.old[
+- Can spawn hundred of thousands
+]
+]
+
+.pushdown[
+```elixir
+current_process = self()
+
+# Spawn an Elixir process (not an operating system one!)
+spawn_link(fn ->
+  send current_process, {:msg, "hello world"}
+end)
+
+# Block until the message is received
+receive do
+  {:msg, contents} -> IO.puts contents
+end
+```
+]
+---
+class: center, middle, inverse
+
+# Fault-tolerance
+
+---
+.left-column[
+### Fault-tolerance
+]
+
+.right-column[
+- We know things will go wrong !
+]
+---
+.left-column[
+### Fault-tolerance
+]
+
+.right-column[
+.old[
+- We know things will go wrong !
+]
+- Use supervisors that will handle failures
+]
+---
+.left-column[
+### Fault-tolerance
+]
+
+.right-column[
+.old[
+- We know things will go wrong !
+]
+.old[
+- Use supervisors that will handle failures
+]
+]
+
+.pushdown[
+```elixir
+children = [
+  TCP.Pool,
+  {TCP.Acceptor, port: 4040}
+]
+
+Supervisor.start_link(children, strategy: :one_for_one)
+```
+]
+---
+class: center, middle, inverse
+
+# Functional programming
+---
+.left-column[
+### Functional programming
+]
+
+.right-column[
+.no-margin[
+- Functions defined in modules
+]
+]
+---
+.left-column[
+### Functional programming
+]
+
+.right-column[
+.no-margin[
+.old[
+- Functions defined in modules
+]
+- Immutability (no race condition 👍)
+]
+]
+---
+.left-column[
+### Functional programming
+]
+
+.right-column[
+.no-margin[
+.old[
+- Functions defined in modules
+- Immutability (no race condition 👍)
+]
+- Pattern matching 😍
+]
+]
+---
+.left-column[
+### Functional programming
+]
+
+.right-column[
+.no-margin[
+.old[
+- Functions defined in modules
+- Immutability (no race condition 👍)
+- Pattern matching 😍
+]
+- High order functions
+]
+]
+---
+.left-column[
+### Functional programming
+]
+
+.right-column[
+.no-margin[
+.old[
+- Functions defined in modules
+- Immutability (no race condition 👍)
+- Pattern matching 😍
+- High order functions
+]
+- Tuples, Lists, Maps
+]
+]
+---
+.left-column[
+### Functional programming
+]
+
+.right-column[
+.no-margin[
+.old[
+- Functions defined in modules
+- Immutability (no race condition 👍)
+- Pattern matching 😍
+- High order functions
+- Tuples, Lists, Maps
+]
+- Pipe operator `|>`
+]
+]
+---
+.left-column[
+### Functional programming
+]
+
+.right-column[
+.no-margin.old[
+- Functions defined in modules
+- Immutability (no race condition 👍)
+- Pattern matching 😍
+- High order functions
+- Tuples, Lists, Maps
+- Pipe operator `|>`
+]
+]
+.pushdown[
+```elixir
+["A", "B", "C"] = "a,b,c"
+   |> String.split(",") # split takes 2 arguments but here
+                        # the first argument is omitted
+                        # in the parentheses and
+                        # the left side of the |> operator
+                        # will be the first argument implicitly
+   |> Enum.map( &String.upcase/1 )
+
+# This is equivalent to:
+Enum.map(String.split("a,b,c", ","), &String.upcase/1)
+```
+]
+
+---
+class: center, middle, inverse
+
+# Powerful tooling
+
+---
+.left-column[
+### Powerful tooling
+]
+
+.right-column[
+.no-margin[
+- mix : build tool
+]
+]
+.pushdown[
+```
+$ mix new my_app
+$ cd my_app
+$ mix test
+.
+
+Finished in 0.04 seconds (0.04s on load, 0.00s on tests)
+1 tests, 0 failures
+```
+]
+---
+.left-column[
+### Powerful tooling
+]
+
+.right-column[
+.no-margin[
+.old[
+- mix : build tool
+]
+- hex : package manager
+]
+]
+.pushdown[
+```elixir
+  defp deps() do
+    [
+      {:ecto, "~> 2.0"},
+      {:postgrex, "~> 0.8.1"},
+      {:cowboy, github: "ninenines/cowboy"},
+    ]
+  end
+```
+]
+---
+.left-column[
+### Powerful tooling
+]
+
+.right-column[
+.no-margin[
+.old[
+- mix : build tool
+- hex : package manager
+]
+- iEx : Interactive Shell
+]
+]
+.pushdown[
+```elixir
+$ iex
+Interactive Elixir - press Ctrl+C to exit
+(type h() ENTER for help)
+
+iex> h String.trim           # Prints the documentation
+
+iex> i "Hello, World"        # Prints information
+                             # about the given data type
+
+iex> break! String.trim/1    # Sets a breakpoint in
+                             # the String.trim/1 function
+
+iex> recompile               # Recompiles the current
+                             # project on the fly
+```
+]
+---
+.left-column[
+### Powerful tooling
+]
+
+.right-column[
+.no-margin[
+.old[
+- mix : build tool
+- hex : package manager
+- iEx : Interactive Shell
+]
+- Full Erlang support !
+]
+.pre[
+![Erlang image](erlang.jpg)
+]
+]
+---
+.left-column[
+### Powerful tooling
+]
+
+.right-column[
+.no-margin[
+.old[
+- mix : build tool
+- hex : package manager
+- iEx : Interactive Shell
+]
+- Full Erlang support !
+]
+]
+.pushdown[
+```elixir
+iex> :crypto.hash(:md5, "Using crypto from Erlang OTP")
+<<192, 223, 75, 115, ...>>
+```
+]
+---
+class: center, middle, inverse
+.ima[![Dito](dito.jpg)]
+---
+class: center, middle, inverse
+
+# Elixir basics
+---
+## Numbers
+
+```elixir
+4 = 2 + 2
+13 = 27 - 14
+
+150450405 = 35 * 4298583
+28 = 4 * ( 3 + 4 )
+26.846153846153847 = 349 / 13
+
+3 = div(30, 10)
+5 = rem(35, 10)
+```
+---
+## Booleans
+```elixir
+false = false and true
+true  = true  and true
+
+true  = true  or false
+false = false or false
+
+# A non boolean argument results in an ArgumentError
+"hello" and true
+
+# || can be used to assign fallback/default values
+"default" = nil || "default"
+
+# short-circuted || result since left side being
+# true makes it true
+"first" = "first" || "second"
+
+"second" = "first" && "second"
+# short-circuted && result, left-side false value returned
+false = false && "second"
+```
+---
+## Strings
+```elixir
+message = "Hello World !"
+IO.puts "The message is #{message}"
+
+"Hello World" = "Hello" <> " " <> "World"
+
+"HELLO WORLD!" = String.upcase("Hello World!")
+8 = String.length("Random !")
+
+["1", "2", "3"] = String.split("1,2,3" , ",")
+["1", "2"] = String.split("   1  \n \t   2 \n")
+
+ "1,2,3" = Enum.join(["1","2","3"], ",")
+```
+---
+## Atoms
+```elixir
+:hello
+false = :hello == :world
+
+true = true == :true
+true = is_atom(false)
+true = is_boolean(:false)
+
+{:ok, Result} = my_fun(arg)
+```
+---
+## Tuples
+
+```elixir
+{}
+{1, :two, "three"}
+
+tuple = {1, :two, "three"}
+1 = elem(tuple, 0)
+"three" = elem(tuple, 2)
+
+0 = tuple_size({})
+3 = tuple_size({1, 2, 3})
+
+{val1, 2} = {1, 2}
+1 = val1
+```
+---
+## Lists
+```elixir
+[1, 2, true, 3] = [1, 2, true, 3]
+3 = length [1, 2, 3]
+
+[1, 2, 3, 4, 5, 6] = [1, 2, 3] ++ [4, 5, 6]
+[1, 2, 3, true] = [1, true, 2, false, 3, true] -- [true, false]
+
+list = [1, 2, 3]
+1 = hd(list)
+[2, 3] = tl(list)
+
+hd [] #=> ** (ArgumentError) argument error
+
+[1,2,3] = [1 | [2,3]]
+```
+---
+## Map
+```elixir
+%{}
+%{3 => "four", "one" => :two} =%{"one" => :two, 3 => "four"}
+
+map = %{a: 1, b: 2}
+{:ok, 1} = Map.fetch(map, :a)
+2 = map[:b]
+nil = map["non_existing_key"]
+
+
+map = %{foo: "bar", baz: "bong"}
+"bar" = map.foo
+map.non_existing_key
+#=> ** (KeyError) key :non_existing_key
+#      not found in: %{baz: "bong", foo: "bar"}
+
+%{} = %{foo: "bar"}
+%{a: a} = %{:a => 1, "b" => 2, [:c, :e, :e] => 3}
+1 = a
+%{:c => 3} = %{:a => 1, 2 => :b}
+#=> ** (MatchError) no match of right
+#      hand side value: %{2 => :b, :a => 1}
+```
+---
+## Functions
+```elixir
+square = fn(x) -> x * x end
+
+# calling an anonymous function uses a period
+# before the parentheses
+4 = square.(2)
+
+
+# pattern matching the arguments can be used
+first = fn([head|rest]) -> head end
+1 = first.([1, 2])
+
+# anonymous functions are commonly used as arguments
+# to other functions
+[1, 4, 9] = Enum.map([1, 2, 3], square)
+[3, 4, 5] = Enum.map([1, 2, 3], fn(x) -> x + 2 end)
+```
+---
+## Modules
+```elixir
+# functions are defined inside Modules
+defmodule Examples do
+
+  # basic defintion
+  def do_stuff( params ) do
+      "result"
+  end
+
+  #shorthand syntax
+  def shorthand(), do: "result"
+
+  # defp is for private functions
+  defp private_method, do: "private"
+
+  # params can pattern match
+  def match_this(%{:key => value}), do: value
+
+  # the first matching function is called (order matters)
+  def test(test), do: "matches any param"
+  def test([]), do: "never matched"
+
+end
+```
+---
+## Pipe operator
+```elixir
+foo(bar(baz(new_function()))) #=> 💩
+
+new_function() |> baz() |> bar() |> foo() #=> ♥️
+
+["Elixir", "rocks"] = "Elixir rocks" |> String.split()
+["ELIXIR", "ROCKS"] = "Elixir rocks" |>
+                         String.upcase() |>
+                         String.split()
+true = "elixir" |> String.ends_with?("ixir")
+```
+---
+class: center, middle, inverse
+.ima[![Lama](lama.jpg)]
+---
+class: center, middle, inverse
+
+# Concurrency
+---
+## Shell itself is a process !!
+```elixir
+iex(1)> self()
+#PID<0.82.0>
+```
+---
+## Sending messages
+```elixir
+iex(2)> send(self(), :foo)
+:foo
+iex(3)> pid = self()
+#PID<0.82.0>
+iex(4)> pid |> send(:bar)
+:bar
+```
+---
+## Sending messages
+```elixir
+iex(2)> send(self(), :foo)
+:foo
+iex(3)> pid = self()
+#PID<0.82.0>
+iex(4)> pid |> send(:bar)
+:bar
+```
+```elixir
+iex(5)> flush()
+:foo
+:bar
+:ok
+iex(6)> flush()
+:ok
+```
+---
+## Receiving messages
+```elixir
+iex(7)> send(self(), :test1)
+:test1
+iex(8)> receive do
+...(8)> x -> x
+...(8)> end
+:test1
+```
+---
+## Receiving messages
+```elixir
+iex(7)> send(self(), :test1)
+:test1
+iex(8)> receive do
+...(8)> x -> x
+...(8)> end
+:test1
+```
+```elixir
+iex(9)> send(self(), 12)
+12
+iex(10)> receive do
+...(10)> y -> y * 2
+...(10)> end
+24
+```
+---
+## Spawning processes
+```elixir
+iex(1)> spawn fn -> IO.puts "I'm a spawned process !!" end
+I'm a spawned process !!
+#PID<0.84.0>
+```
+---
+## Spawning processes
+```elixir
+defmodule Bounce do
+  def report do
+    receive do
+      msg -> IO.puts("Received : #{msg}")
+    end
+  end
+end
+```
+```elixir
+iex(2)> pid = spawn(Bounce, :report, [])
+#PID<0.85.0>
+iex(3)> send(pid, "Secret")
+Received : Secret
+"Secret"
+iex(4)> send(pid, "Other secret")
+"Other secret"
+```
+---
+## Spawning processes
+```elixir
+defmodule Bounce do
+  def report do
+    receive do
+      msg -> IO.puts("Received : #{msg}")
+    end
+    report
+  end
+end
+```
+```elixir
+iex(5)> pid = spawn(Bounce, :report, [])
+#PID<0.86.0>
+iex(6)> send(pid, "Secret")
+Received : Secret
+"Secret"
+iex(7)> send(pid, "Other secret")
+Received : Other secret
+"Other secret"
+```
+---
 class: center, middle, inverse
 
 # That's all folks!
