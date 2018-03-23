@@ -404,7 +404,7 @@ class: center, middle, inverse
 ]
 ]
 .pushdown[
-```
+```bash
 $ mix new my_app
 $ cd my_app
 $ mix test
@@ -708,69 +708,69 @@ class: center, middle, inverse
 ---
 ## Shell itself is a process !!
 ```elixir
-iex(1)> self()
+iex> self()
 #PID<0.82.0>
 ```
 ---
 ## Sending messages
 ```elixir
-iex(2)> send(self(), :foo)
+iex> send(self(), :foo)
 :foo
-iex(3)> pid = self()
+iex> pid = self()
 #PID<0.82.0>
-iex(4)> pid |> send(:bar)
+iex> pid |> send(:bar)
 :bar
 ```
 ---
 ## Sending messages
 ```elixir
-iex(2)> send(self(), :foo)
+iex> send(self(), :foo)
 :foo
-iex(3)> pid = self()
+iex> pid = self()
 #PID<0.82.0>
-iex(4)> pid |> send(:bar)
+iex> pid |> send(:bar)
 :bar
 ```
 ```elixir
-iex(5)> flush()
+iex> flush()
 :foo
 :bar
 :ok
-iex(6)> flush()
+iex> flush()
 :ok
 ```
 ---
 ## Receiving messages
 ```elixir
-iex(7)> send(self(), :test1)
+iex> send(self(), :test1)
 :test1
-iex(8)> receive do
-...(8)> x -> x
-...(8)> end
+iex> receive do
+...> x -> x
+...> end
 :test1
 ```
 ---
 ## Receiving messages
 ```elixir
-iex(7)> send(self(), :test1)
+iex> send(self(), :test1)
 :test1
-iex(8)> receive do
-...(8)> x -> x
-...(8)> end
+iex> receive do
+...> x -> x
+...> end
 :test1
 ```
 ```elixir
-iex(9)> send(self(), 12)
+iex> send(self(), 12)
 12
-iex(10)> receive do
-...(10)> y -> y * 2
-...(10)> end
+iex> receive do
+...> y -> y * 2
+...> end
 24
 ```
 ---
 ## Spawning processes
 ```elixir
-iex(1)> spawn fn -> IO.puts "I'm a spawned process !!" end
+iex> spawn fn -> IO.puts "I'm a spawned process !!" end
 I'm a spawned process !!
 #PID<0.84.0>
 ```
@@ -785,13 +785,42 @@ defmodule Bounce do
   end
 end
 ```
+---
+## Spawning processes
 ```elixir
-iex(2)> pid = spawn(Bounce, :report, [])
+defmodule Bounce do
+  def report do
+    receive do
+      msg -> IO.puts("Received : #{msg}")
+    end
+  end
+end
+```
+```elixir
+iex> pid = spawn(Bounce, :report, [])
 #PID<0.85.0>
-iex(3)> send(pid, "Secret")
+iex> send(pid, "Secret")
 Received : Secret
 "Secret"
-iex(4)> send(pid, "Other secret")
+```
+---
+## Spawning processes
+```elixir
+defmodule Bounce do
+  def report do
+    receive do
+      msg -> IO.puts("Received : #{msg}")
+    end
+  end
+end
+```
+```elixir
+iex> pid = spawn(Bounce, :report, [])
+#PID<0.85.0>
+iex> send(pid, "Secret")
+Received : Secret
+"Secret"
+iex> send(pid, "Other secret")
 "Other secret"
 ```
 ---
@@ -807,15 +836,67 @@ defmodule Bounce do
 end
 ```
 ```elixir
-iex(5)> pid = spawn(Bounce, :report, [])
+iex> pid = spawn(Bounce, :report, [])
 #PID<0.86.0>
-iex(6)> send(pid, "Secret")
+iex> send(pid, "Secret")
 Received : Secret
 "Secret"
-iex(7)> send(pid, "Other secret")
+iex> send(pid, "Other secret")
 Received : Other secret
 "Other secret"
 ```
+---
+### Distributed processes
+```bash
+*/home/bastien/test ∫ iex --cookie munchkin --sname serv
+Erlang/OTP 19 [erts-8.2] [source] [64-bit] [smp:8:8]
+[async-threads:10] [hipe] [kernel-poll:false]
+
+Interactive Elixir (1.6.0) - press Ctrl+C to exit
+(type h() ENTER for help)
+iex(serv@adomik-3-3)1>
+```
+---
+### Distributed processes
+```bash
+/home/bastien/test ∫ iex --cookie munchkin --sname serv
+Erlang/OTP 19 [erts-8.2] [source] [64-bit] [smp:8:8]
+[async-threads:10] [hipe] [kernel-poll:false]
+
+Interactive Elixir (1.6.0) - press Ctrl+C to exit
+(type h() ENTER for help)
+iex(serv@adomik-3-3)1>
+```
+```elixir
+iex> Node.connect :"serv@adomik-3-3"
+true
+iex> Node.list
+[:"serv@adomik-3-3"]
+iex> Node.spawn_link :"serv@adomik-3-3", fn -> Hello.world end
+#PID<9014.59.0>
+hello world
+```
+---
+### Distributed processes
+```elixir
+iex> pid = Node.spawn_link :"serv@adomik-3-3", fn ->
+...>   receive do
+...>     {:ping, client} -> send client, :pong
+...>   end
+...> end
+#PID<9014.59.0>
+iex> send pid, {:ping, self()}
+{:ping, #PID<0.73.0>}
+iex> flush()
+:pong
+:ok
+```
+---
+class: center, middle, inverse
+
+# Let's build a chat app
+---
+## Server side
 ---
 class: center, middle, inverse
 
@@ -827,7 +908,9 @@ Slideshow created with [remark](http://gnab.github.com/remark).
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
     </script>
     <script>
-      var slideshow = remark.create();
+      var slideshow = remark.create({
+        highlightLines: true
+      });
     </script>
   </body>
 </html>
