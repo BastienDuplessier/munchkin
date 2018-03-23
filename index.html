@@ -187,7 +187,7 @@ class: center, middle, inverse
 .old[
 - Easy to use
 ]
-- Can spawn hundred of thousands
+- Can spawn hundred of thousands processes
 ]
 ---
 .left-column[
@@ -202,7 +202,46 @@ class: center, middle, inverse
 - Easy to use
 ]
 .old[
-- Can spawn hundred of thousands
+- Can spawn hundred of thousands processes
+]
+- Based on Erlang VM : BEAM
+]
+---
+.left-column[
+### Scalability
+]
+
+.right-column[
+.old[
+- Lightweight threads
+]
+.old[
+- Easy to use
+]
+.old[
+- Can spawn hundred of thousands processes
+]
+- Based on Erlang VM : BEAM
+
+.no-margin[![Erlang](erlang-movie.png)]
+]
+---
+.left-column[
+### Scalability
+]
+
+.right-column[
+.old[
+- Lightweight threads
+]
+.old[
+- Easy to use
+]
+.old[
+- Can spawn hundred of thousands processes
+]
+.old[
+- Based on Erlang VM : BEAM
 ]
 ]
 
@@ -511,7 +550,7 @@ iex> :crypto.hash(:md5, "Using crypto from Erlang OTP")
 ]
 ---
 class: center, middle, inverse
-.ima[![Dito](dito.jpg)]
+.ima[![Dito](dito.png)]
 ---
 class: center, middle, inverse
 
@@ -896,7 +935,309 @@ class: center, middle, inverse
 
 # Let's build a chat app
 ---
+class: center, middle, inverse
+
+## Munchkin
+![Munchkin](munchkin.jpg)
+---
+## Starting
+```bash
+$ > mix new munchkin
+ * creating README.md
+ * creating .formatter.exs
+ * creating .gitignore
+ * creating mix.exs
+ * creating config
+ * creating config/config.exs
+ * creating lib
+ * creating lib/munchkin.ex
+ * creating test
+ * creating test/test_helper.exs
+ * creating test/munchkin_test.exs
+
+Your Mix project was created successfully.
+You can use "mix" to compile it, test it, and more:
+
+    cd munchkin
+    mix test
+
+Run "mix help" for more commands.
+```
+---
+## Starting
+```elixir
+defmodule Munchkin do
+  @moduledoc """
+  Documentation for Munchkin.
+  """
+
+  @doc """
+  Hello world.
+
+  ## Examples
+
+      iex> Munchkin.hello
+      :world
+
+  """
+  def hello do
+    :world
+  end
+end
+```
+---
 ## Server side
+---
+## Server side
+```elixir
+  def server(clients) do
+    receive do
+      {:stop, reason} ->
+        IO.puts "Stopping server (#{reason})"
+    end
+  end
+```
+---
+## Server side
+```elixir
+  def server(clients) do
+    receive do
+      {:login, name, pid} ->
+        new_clients = handle_login(name, pid, clients)
+        server(new_clients)
+      {:logout, name} ->
+        new_clients = handle_logout(name, clients)
+        server(new_clients)
+      {:stop, reason} ->
+        IO.puts "Stopping server (#{reason})"
+    end
+  end
+```
+---
+## Server side
+```elixir
+  def server(clients) do
+    receive do
+      {:msg, from, target, message} ->
+        handle_message(from, target, message, clients)
+        server(clients)
+      {:login, name, pid} ->
+        new_clients = handle_login(name, pid, clients)
+        server(new_clients)
+      {:logout, name} ->
+        new_clients = handle_logout(name, clients)
+        server(new_clients)
+      {:stop, reason} ->
+        IO.puts "Stopping server (#{reason})"
+    end
+  end
+```
+---
+## Server side
+```elixir
+  def handle_message(from, target, message, clients) do
+    clients[target] |> send({:msg, from, message})
+  end
+```
+---
+## Server side
+```elixir
+  def handle_message(from, target, message, clients) do
+    clients[target] |> send({:msg, from, message})
+  end
+
+  def handle_login(name, pid, clients) do
+    Map.put(clients, name, pid)
+  end
+```
+---
+## Server side
+```elixir
+  def handle_message(from, target, message, clients) do
+    clients[target] |> send({:msg, from, message})
+  end
+
+  def handle_login(name, pid, clients) do
+    Map.put(clients, name, pid)
+  end
+
+  def handle_logout(name, clients) do
+    Map.delete(clients, name)
+  end
+```
+---
+## Server side
+```elixir
+  def start_server do
+    IO.puts "Starting server"
+    pid = spawn(Munchkin, :server, [%{}])
+    :global.register_name(:server, pid)
+    :ok
+  end
+```
+---
+## Client side
+---
+## Client side
+```elixir
+  def send_to_server(params) do
+    :global.whereis_name(:server) |> send(params)
+  end
+```
+---
+## Client side
+```elixir
+  def connect() do
+    Node.connect(:"serv@adomik-3-3")
+    pid = spawn(Munchkin, :client, [:none])
+    Process.register pid, Munchkin.Client
+    :ok
+  end
+```
+---
+## Client side
+```elixir
+  def client(:none) do
+    IO.puts "Starting client"
+    receive do
+      {:stop, reason} ->
+        IO.puts "Stopping (#{reason})"
+    end
+  end
+```
+---
+## Client side
+```elixir
+  def client(:none) do
+    IO.puts "Starting client"
+    receive do
+      {:login, name} ->
+        IO.puts "Login as #{name}"
+        send_to_server({:login, name, self()})
+        client(name)
+      {:stop, reason} ->
+        IO.puts "Stopping (#{reason})"
+    end
+  end
+```
+---
+## Client side
+```elixir
+  def client(name) do
+    receive do
+      {:stop, reason} ->
+        IO.puts "Stopping (#{reason})"
+    end
+  end
+```
+---
+## Client side
+```elixir
+  def client(name) do
+    receive do
+      {:msg, from, message} ->
+        IO.puts "#{from} says : #{message}"
+        client(name)
+      {:stop, reason} ->
+        IO.puts "Stopping (#{reason})"
+    end
+  end
+```
+---
+## Client side
+```elixir
+  def client(name) do
+    receive do
+      {:msg, from, message} ->
+        IO.puts "#{from} says : #{message}"
+        client(name)
+      {:tell, to, message} ->
+        send_to_server({:msg, name, to, message})
+        client(name)
+      {:stop, reason} ->
+        IO.puts "Stopping (#{reason})"
+    end
+  end
+```
+---
+## Client side
+```elixir
+  def client(name) do
+    receive do
+      {:msg, from, message} ->
+        IO.puts "#{from} says : #{message}"
+        client(name)
+      {:tell, to, message} ->
+        send_to_server({:msg, name, to, message})
+        client(name)
+      {:logout} ->
+        IO.puts "Logout of #{name}"
+        send_to_server({:logout, name})
+        client(:none)
+      {:stop, reason} ->
+        IO.puts "Stopping (#{reason})"
+    end
+  end
+```
+---
+## Client side
+```elixir
+  def login(name) do
+    Process.whereis(Munchkin.Client) |> send({:login, name})
+    :ok
+  end
+```
+---
+## Client side
+```elixir
+  def login(name) do
+    Process.whereis(Munchkin.Client) |> send({:login, name})
+    :ok
+  end
+
+  def logout() do
+    Process.whereis(Munchkin.Client) |> send({:logout})
+    :ok
+  end
+```
+---
+## Client side
+```elixir
+  def login(name) do
+    Process.whereis(Munchkin.Client) |> send({:login, name})
+    :ok
+  end
+
+  def logout() do
+    Process.whereis(Munchkin.Client) |> send({:logout})
+    :ok
+  end
+
+  def tell(to, message) do
+    Process.whereis(Munchkin.Client) |> 
+                                    send({:tell, to, message})
+    :ok
+  end
+```
+---
+class: center, middle, inverse
+# Demo time !
+![Demo](demo.jpg)
+---
+class: center, middle, inverse
+
+# Live programming
+### (Maybe skipped)
+.ima[![Doge](doge.jpg)]
+---
+class: center, middle, inverse
+
+# Questions ?
+### I don't want to answer but I'll force myself
+---
+class: center, middle, inverse
+# More images
+![Capybara](capybara.png)
 ---
 class: center, middle, inverse
 
