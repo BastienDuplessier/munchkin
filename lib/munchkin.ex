@@ -17,6 +17,7 @@ defmodule Munchkin do
   end
 
   def start_server do
+    IO.puts "Starting server"
     pid = spawn(Munchkin, :server, [%{}])
     :global.register_name(:server, pid)
     :ok
@@ -62,9 +63,10 @@ defmodule Munchkin do
   end
 
   def client(:none) do
-    IO.puts "Start"
+    IO.puts "Starting client"
     receive do
       {:login, name} ->
+        IO.puts "Login as #{name}"
         send_to_server({:login, name, self()})
         client(name)
       {:stop, reason} ->
@@ -73,7 +75,6 @@ defmodule Munchkin do
   end
 
   def client(name) do
-    IO.puts "Logged as #{name}"
     receive do
       {:msg, from, message} ->
         IO.puts "#{from} says : #{message}"
@@ -82,6 +83,7 @@ defmodule Munchkin do
         send_to_server({:msg, name, to, message})
         client(name)
       {:logout} ->
+        IO.puts "Logout of #{name}"
         send_to_server({:logout, name})
         client(:none)
       {:stop, reason} ->
