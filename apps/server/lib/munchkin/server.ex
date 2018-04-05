@@ -33,6 +33,11 @@ defmodule Munchkin.Server do
     {:reply, {:err, "not found"}, state}
   end
 
+  def handle_cast({:yell, {from, pid, message}}, state) do
+    yell(message, {from, pid}, state)
+    {:noreply, state}
+  end
+
   defp login(state, name, from) do
     case Map.fetch(state, name) do
       {:ok, ^from} ->
@@ -70,5 +75,13 @@ defmodule Munchkin.Server do
       _ ->
         {{:err, "User not found"}, state}
     end
+  end
+
+  defp yell(message, {from, pid}, state) do
+    Enum.each(state, fn({_, to}) ->
+      if pid != to do
+        GenServer.cast(to, {:msg, from, message})
+      end
+    end)
   end
 end
