@@ -36,6 +36,17 @@ defmodule MunchkinClient.Server do
     {:reply, response, name}
   end
 
+  def handle_call({:rename, name}, _pid, name) do
+    {:reply, {:err, "Already named #{name}"}, name}
+  end
+
+  def handle_call({:rename, name}, _pid, old_name) do
+    case server_pid() |> GenServer.call({:rename, {old_name, name}}) do
+      :ok -> {:reply, :ok, name}
+      {:err, reason} -> {:reply, {:err, reason}, old_name}
+    end
+  end
+
   def handle_call(_, _pid, :none) do
     {:reply, {:err, "Not logged in"}, :none}
   end

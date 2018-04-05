@@ -18,4 +18,9 @@ defmodule Client do
   def yell(message) do
     GenServer.call(Munchkin.Client, {:yell, message})
   end
+
+  def rename(name) do
+    GenServer.call(Munchkin.Client, {:rename, name})
+  end
+
 end
