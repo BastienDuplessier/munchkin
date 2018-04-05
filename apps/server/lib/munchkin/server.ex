@@ -19,6 +19,11 @@ defmodule Munchkin.Server do
     {:reply, response, new_state}
   end
 
+  def handle_call({:tell, {from, to, message}}, _pid, state) do
+    response = tell(from, to, message, state)
+    {:reply, response, state}
+  end
+
   def handle_call(_, _, state) do
     {:reply, {:err, "not found"}, state}
   end
@@ -43,4 +48,10 @@ defmodule Munchkin.Server do
     end
   end
 
+  defp tell(from, to, message, state) do
+    case Map.fetch(state, to) do
+      {:ok, pid} -> GenServer.cast(pid, {:msg, from, message})
+      _ -> {:err, "User not found"}
+    end
+  end
 end
