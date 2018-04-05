@@ -26,8 +26,18 @@ defmodule MunchkinClient.Server do
     end
   end
 
+  def handle_call({:tell, to, message}, _pid, name) do
+    response = server_pid() |> GenServer.call({:tell, {name, to, message}})
+    {:reply, response, name}
+  end
+
   def handle_call(_, _pid, :none) do
     {:reply, {:err, "Not logged in"}, :none}
+  end
+
+  def handle_cast({:msg, from, message}, name) do
+    IO.puts "[#{from}]: #{message}"
+    {:noreply, name}
   end
 
   defp server_pid do

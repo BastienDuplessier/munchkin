@@ -11,7 +11,8 @@ defmodule Client do
     GenServer.call(Munchkin.Client, {:logout})
   end
 
-  def tell do
+  def tell(to, message) do
+    GenServer.call(Munchkin.Client, {:tell, to, message})
   end
 
   def yell do
