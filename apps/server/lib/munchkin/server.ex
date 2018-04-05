@@ -24,6 +24,11 @@ defmodule Munchkin.Server do
     {:reply, response, state}
   end
 
+  def handle_call({:rename, names}, {pid, _ref}, state) do
+    {response, new_state} = rename(names, pid, state)
+    {:reply, response, new_state}
+  end
+
   def handle_call(_, _, state) do
     {:reply, {:err, "not found"}, state}
   end
@@ -52,6 +57,18 @@ defmodule Munchkin.Server do
     case Map.fetch(state, to) do
       {:ok, pid} -> GenServer.cast(pid, {:msg, from, message})
       _ -> {:err, "User not found"}
+    end
+  end
+
+  defp rename({old, new}, pid, state) do
+    case Map.fetch(state, old) do
+      {:ok, ^pid} ->
+        new_state = Map.delete(state, old)
+        {:ok, Map.put(new_state, new, pid)}
+      {:ok, _} ->
+        {{:err, "Pid not corresponding"}, state}
+      _ ->
+        {{:err, "User not found"}, state}
     end
   end
 end
