@@ -6,7 +6,9 @@ defmodule Munchkin.Server do
   end
 
   def start_link(options \\ []) do
-    GenServer.start_link(__MODULE__, %{}, options)
+    {:ok, pid} = GenServer.start_link(__MODULE__, %{}, options)
+    :global.register_name(:server, pid)
+    {:ok, pid}
   end
 
   def handle_call({:login, name}, {pid, _ref}, state) do
