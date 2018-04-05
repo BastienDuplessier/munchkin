@@ -31,6 +31,11 @@ defmodule MunchkinClient.Server do
     {:reply, response, name}
   end
 
+  def handle_call({:yell, message}, _pid, name) do
+    response = server_pid() |> GenServer.cast({:yell, {name, self(), message}})
+    {:reply, response, name}
+  end
+
   def handle_call(_, _pid, :none) do
     {:reply, {:err, "Not logged in"}, :none}
   end
