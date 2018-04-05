@@ -14,6 +14,11 @@ defmodule Munchkin.Server do
     {:reply, response, new_state}
   end
 
+  def handle_call({:logout, name}, _pid, state) do
+    {response, new_state} = logout(state, name)
+    {:reply, response, new_state}
+  end
+
   def handle_call(_, _, state) do
     {:reply, {:err, "not found"}, state}
   end
@@ -26,6 +31,15 @@ defmodule Munchkin.Server do
         {{:err, "Name already taken"}, state}
       _ ->
         {:ok, Map.put(state, name, from)}
+    end
+  end
+
+  defp logout(state, name) do
+    case Map.fetch(state, name) do
+      {:ok, _pid} ->
+        {:ok, Map.delete(state, name)}
+      _ ->
+        {{:err, "User not found"}, state}
     end
   end
 
