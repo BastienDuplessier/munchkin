@@ -3,16 +3,12 @@ defmodule Client do
   Documentation for Client.
   """
 
-  @doc """
-  Hello world.
+  def login do
+  end
 
-  ## Examples
+  def tell do
+  end
 
-      iex> Client.hello
-      :world
-
-  """
-  def hello do
-    :world
+  def yell do
   end
 end
