@@ -3,6 +3,10 @@ defmodule Client do
   Documentation for Client.
   """
 
+  def login(name) do
+    GenServer.call(Munchkin.Client, {:login, name})
+  end
+
   def login do
   end
 
