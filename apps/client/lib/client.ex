@@ -7,7 +7,8 @@ defmodule Client do
     GenServer.call(Munchkin.Client, {:login, name})
   end
 
-  def login do
+  def logout do
+    GenServer.call(Munchkin.Client, {:logout})
   end
 
   def tell do

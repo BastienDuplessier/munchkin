@@ -19,6 +19,13 @@ defmodule MunchkinClient.Server do
     end
   end
 
+  def handle_call({:logout}, _pid, name) do
+    case server_pid() |> GenServer.call({:logout, name}) do
+      :ok -> {:reply, :ok, :none}
+      error -> {:reply, error, name}
+    end
+  end
+
   def handle_call(_, _pid, :none) do
     {:reply, {:err, "Not logged in"}, :none}
   end
