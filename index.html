@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Introducing : Elixir</title>
+    <title>Elixir 2 - The return of the revenge</title>
     <meta charset="utf-8">
     <style>
 
@@ -34,6 +34,10 @@
 
       .no-margin ul {
         margin: 0;
+      }
+
+      .no-margin {
+        margin: 20px 0;
       }
 
       pre {
@@ -89,9 +93,9 @@
     <textarea id="source">
 class: center, middle, inverse
 
-# Introducing : Elixir
-
-### by [Bastien](http://github.com/BastienDuplessier)
+# Elixir 2
+## The return of the revenge
+### par [moi](http://github.com/BastienDuplessier)
 
 ---
 class: center, middle
@@ -103,918 +107,454 @@ class: center, middle
 ### [http://github.com/BastienDuplessier/munchkin](http://github.com/BastienDuplessier/munchkin)
 
 ---
-name: default
-layout: true
-task: &nbsp;
+class: center, middle, inverse
 
-.task[{{task}}]
-
+# Elixir c'est cool !
 ---
 class: center, middle, inverse
 
-# Elixir ??
-
+## Mais revoyons un peu une notion clé
 ---
-.left-column[
-  ### What is it ?
-]
-.right-column.pushdown[
-  .pre[
-    Elixir is a dynamic, functional language designed for building scalable and maintainable applications.
-  ]
-]
+## Listes
 
+.center.middle[![](list.png)]
 ---
-.left-column[
-  ### What is it ?
-]
-.right-column.pushdown[
-  .old.pre[
-    Elixir is a dynamic, functional language designed for building scalable and maintainable applications.
-  ]
-  .pre[
-    Elixir leverages the Erlang VM, known for running low-latency, distributed and fault-tolerant systems, while also being successfully used in web development and the embedded software domain.
-  ]
-]
----
-.left-column[
-  ### What is it ?
-]
-.right-column.pushdown[
-  .old.pre[
-    Elixir is a dynamic, functional language designed for building scalable and maintainable applications.
-  ]
-  .old.pre[
-    Elixir leverages the Erlang VM, known for running low-latency, distributed and fault-tolerant systems, while also being successfully used in web development and the embedded software domain.
-  ]
-  .a.right.pre[
-    https://elixir-lang.org/
-  ]
-]
+## Listes
 
----
-class: center, middle, inverse
-
-# Scalability
-
----
-.left-column[
-### Scalability
-]
-.right-column[
-- Lightweight threads
-]
----
-.left-column[
-### Scalability
-]
-
-.right-column[
-.old[
-- Lightweight threads
-]
-- Easy to use
-]
----
-.left-column[
-### Scalability
-]
-
-.right-column[
-.old[
-- Lightweight threads
-]
-.old[
-- Easy to use
-]
-- Can spawn hundred of thousands processes
-]
----
-.left-column[
-### Scalability
-]
-
-.right-column[
-.old[
-- Lightweight threads
-]
-.old[
-- Easy to use
-]
-.old[
-- Can spawn hundred of thousands processes
-]
-- Based on Erlang VM : BEAM
-]
----
-.left-column[
-### Scalability
-]
-
-.right-column[
-.old[
-- Lightweight threads
-]
-.old[
-- Easy to use
-]
-.old[
-- Can spawn hundred of thousands processes
-]
-- Based on Erlang VM : BEAM
-
-.no-margin[![Erlang](erlang-movie.png)]
-]
----
-.left-column[
-### Scalability
-]
-
-.right-column[
-.old[
-- Lightweight threads
-]
-.old[
-- Easy to use
-]
-.old[
-- Can spawn hundred of thousands processes
-]
-.old[
-- Based on Erlang VM : BEAM
-]
-]
-
-.pushdown[
+.center.middle[![](list.png)]
 ```elixir
-current_process = self()
+iex> l1 = [1, 2]
+[1, 2]
+```
+---
+## Listes
 
-# Spawn an Elixir process (not an operating system one!)
-spawn_link(fn ->
-  send current_process, {:msg, "hello world"}
-end)
+.center.middle[![](list.png)]
+```elixir
+iex> l1 = [1, 2]
+[1, 2]
+iex> l2 = [0 | l1]
+[0, 1, 2]
+```
+---
+## Listes
 
-# Block until the message is received
-receive do
-  {:msg, contents} -> IO.puts contents
+.center.middle[![](list.png)]
+```elixir
+iex> l1 = [1, 2]
+[1, 2]
+iex> l2 = [0 | l1]
+[0, 1, 2]
+iex> l3 = [5, 4 | l1]
+[5, 4, 1, 2]
+```
+---
+## Listes
+### Afficher une liste
+
+```elixir
+defmodule Test do
+  def print_list([]) do
+  end
+  def print_list([h|t]) do
+    IO.puts(h)
+    print_list(t) 
+  end
 end
 ```
-]
+---
+## Listes
+### Afficher une liste
+
+```elixir
+defmodule Test do
+  def print_list([]) do
+  end
+  def print_list([h|t]) do
+    IO.puts(h)
+    print_list(t) 
+  end
+end
+
+Test.print_list([1,2,3,4])
+1
+2
+3
+4
+```
+---
+## Listes
+```elixir
+Enum.each([1,2,3], fn(x) -> IO.puts(x) end)
+1
+2
+3
+4
+```
 ---
 class: center, middle, inverse
-
-# Fault-tolerance
-
+## Parlons d'OTP !
 ---
-.left-column[
-### Fault-tolerance
-]
-
-.right-column[
-- We know things will go wrong !
+## OTP
+---
+## OTP
+.no-margin[
+- Open Telecom Platform
 ]
 ---
-.left-column[
-### Fault-tolerance
-]
-
-.right-column[
+## OTP
+.no-margin[
 .old[
-- We know things will go wrong !
+- Open Telecom Platform
 ]
-- Use supervisors that will handle failures
+- Framework
 ]
 ---
-.left-column[
-### Fault-tolerance
-]
-
-.right-column[
+## OTP
+.no-margin[
 .old[
-- We know things will go wrong !
+- Open Telecom Platform
+- Framework
 ]
+- Collection d'outils génériques pour résoudre des problématiques
+]
+---
+## OTP
+.old.no-margin[- Open Telecom Platform
+- Framework
+- Collection d'outils génériques pour résoudre des problématiques]
+.center.middle[![OTP](hello.png)]
+---
+## Behaviors
+---
+## Behaviors
+.no-margin[- Comme des design pattern]
+---
+## Behaviors
+.no-margin[
 .old[
-- Use supervisors that will handle failures
+- Comme des design pattern
 ]
+- Éléments génériques
 ]
+---
+## Behaviors
+.no-margin[
+.old[
+- Comme des design pattern
+- Éléments génériques]
+- Plus que la partie métier à écrire dans des callbacks]
+---
+## Behaviors
+.no-margin[
+.old[
+- Comme des design pattern
+- Éléments génériques
+- Plus que la partie métier à écrire dans des callbacks]
+- Possibilité d'en créer soi même]
+---
+## Behaviors
+.old.no-margin[- Comme des design pattern
+- Éléments génériques
+- Plus que la partie métier à écrire dans des callbacks
+- Possibilité d'en créer soi même]
 
-.pushdown[
 ```elixir
-children = [
-  TCP.Pool,
-  {TCP.Acceptor, port: 4040}
-]
+defmodule Stack do
+  use GenServer
 
-Supervisor.start_link(children, strategy: :one_for_one)
+  # Callbacks
+
+  def handle_call(:pop, _from, [h | t]) do
+    {:reply, h, t}
+  end
+
+  def handle_cast({:push, item}, state) do
+    {:noreply, [item | state]}
+  end
+end
 ```
-]
 ---
-class: center, middle, inverse
-
-# Functional programming
+## Application
 ---
-.left-column[
-### Functional programming
-]
-
-.right-column[
+## Application
 .no-margin[
-- Functions defined in modules
-]
+- Composant qui implémente des fonctionalités spécifiques
 ]
 ---
-.left-column[
-### Functional programming
-]
-
-.right-column[
+## Application
 .no-margin[
 .old[
-- Functions defined in modules
+- Composant qui implémente des fonctionalités spécifiques
 ]
-- Immutability (no race condition 👍)
-]
-]
----
-.left-column[
-### Functional programming
-]
-
-.right-column[
+- Peut être démarré/arrêté
+]---
+## Application
 .no-margin[
 .old[
-- Functions defined in modules
-- Immutability (no race condition 👍)
+- Composant qui implémente des fonctionalités spécifiques
+- Peut être démarré/arrêté
 ]
-- Pattern matching 😍
-]
+- Réutilisable dans d'autres systèmes
 ]
 ---
-.left-column[
-### Functional programming
-]
-
-.right-column[
+## Application
 .no-margin[
 .old[
-- Functions defined in modules
-- Immutability (no race condition 👍)
-- Pattern matching 😍
+- Composant qui implémente des fonctionalités spécifiques
+- Peut être démarré/arrêté
+- Réutilisable dans d'autres systèmes
 ]
-- High order functions
-]
+- “Environement applicatif”
 ]
 ---
-.left-column[
-### Functional programming
-]
-
-.right-column[
+## Application
 .no-margin[
 .old[
-- Functions defined in modules
-- Immutability (no race condition 👍)
-- Pattern matching 😍
-- High order functions
+- Composant qui implémente des fonctionalités spécifiques
+- Peut être démarré/arrêté
+- Réutilisable dans d'autres systèmes
+- “Environement applicatif”
 ]
-- Tuples, Lists, Maps
-]
-]
----
-.left-column[
-### Functional programming
-]
-
-.right-column[
-.no-margin[
-.old[
-- Functions defined in modules
-- Immutability (no race condition 👍)
-- Pattern matching 😍
-- High order functions
-- Tuples, Lists, Maps
-]
-- Pipe operator `|>`
-]
+- Outillage spécifique
 ]
 ---
-.left-column[
-### Functional programming
-]
-
-.right-column[
-.no-margin.old[
-- Functions defined in modules
-- Immutability (no race condition 👍)
-- Pattern matching 😍
-- High order functions
-- Tuples, Lists, Maps
-- Pipe operator `|>`
-]
-]
-.pushdown[
+## Application
+### Démarrer et stopper
 ```elixir
-["A", "B", "C"] = "a,b,c"
-   |> String.split(",") # split takes 2 arguments but here
-                        # the first argument is omitted
-                        # in the parentheses and
-                        # the left side of the |> operator
-                        # will be the first argument implicitly
-   |> Enum.map( &String.upcase/1 )
-
-# This is equivalent to:
-Enum.map(String.split("a,b,c", ","), &String.upcase/1)
+iex> Application.start(:kv)
+:ok
 ```
-]
-
 ---
-class: center, middle, inverse
-
-# Powerful tooling
-
+## Application
+### Démarrer et stopper
+```elixir
+iex> Application.start(:kv)
+{:error, {:already_started, :kv}}
+```
 ---
-.left-column[
-### Powerful tooling
-]
-
-.right-column[
+## Application
+### Démarrer et stopper
+```elixir
+iex> Application.stop(:kv)
+:ok
+```
+---
+## Supervisor
+---
+## Supervisor
 .no-margin[
-- mix : build tool
-]
-]
-.pushdown[
-```bash
-$ mix new my_app
-$ cd my_app
-$ mix test
-.
-
-Finished in 0.04 seconds (0.04s on load, 0.00s on tests)
-1 tests, 0 failures
-```
+- Supervise ses processus enfants
 ]
 ---
-.left-column[
-### Powerful tooling
-]
-
-.right-column[
+## Supervisor
 .no-margin[
 .old[
-- mix : build tool
+- Supervise ses processus enfants
 ]
-- hex : package manager
+- Diverses stratégies pour réagir à la mort d'un processus
 ]
+---
+## Supervisor
+.no-margin[
+.old[
+- Supervise ses processus enfants
+- Diverses stratégies pour réagir à la mort d'un processus
 ]
-.pushdown[
+- Plusieurs manières de relancer les processus individuellement
+]
+---
+## Supervisor
+.old.no-margin[
+- Supervise ses processus enfants
+- Diverses stratégies pour réagir à la mort d'un processus
+- Plusieurs manières de relancer les processus individuellement
+]
 ```elixir
-  defp deps() do
-    [
-      {:ecto, "~> 2.0"},
-      {:postgrex, "~> 0.8.1"},
-      {:cowboy, github: "ninenines/cowboy"},
+defmodule MyApp.Supervisor do
+  use Supervisor
+
+  def start_link(arg) do
+    Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
+  end
+
+  def init(_arg) do
+    children = [
+      {Stack, [:hello]}
     ]
+
+    Supervisor.init(children, strategy: :one_for_one)
   end
+end
 ```
+---
+## GenServer
+---
+## GenServer
+.no-margin[
+- Brique générique pour construire un serveur
 ]
 ---
-.left-column[
-### Powerful tooling
-]
-
-.right-column[
+## GenServer
 .no-margin[
 .old[
-- mix : build tool
-- hex : package manager
+- Brique générique pour construire un serveur
 ]
-- iEx : Interactive Shell
-]
-]
-.pushdown[
-```elixir
-$ iex
-Interactive Elixir - press Ctrl+C to exit
-(type h() ENTER for help)
-
-iex> h String.trim           # Prints the documentation
-
-iex> i "Hello, World"        # Prints information
-                             # about the given data type
-
-iex> break! String.trim/1    # Sets a breakpoint in
-                             # the String.trim/1 function
-
-iex> recompile               # Recompiles the current
-                             # project on the fly
-```
+- Execute un callback quand il reçoit un message
 ]
 ---
-.left-column[
-### Powerful tooling
-]
-
-.right-column[
+## GenServer
 .no-margin[
 .old[
-- mix : build tool
-- hex : package manager
-- iEx : Interactive Shell
+- Brique générique pour construire un serveur
+- Execute un callback quand il reçoit un message
 ]
-- Full Erlang support !
-]
-.pre[
-![Erlang image](erlang.jpg)
-]
+- Se démarre avec un état initial, qui sera passé à chaque callback
 ]
 ---
-.left-column[
-### Powerful tooling
-]
-
-.right-column[
+## GenServer
 .no-margin[
 .old[
-- mix : build tool
-- hex : package manager
-- iEx : Interactive Shell
+- Brique générique pour construire un serveur
+- Execute un callback quand il reçoit un message
+- Se démarre avec un état initial, qui sera passé à chaque callback
 ]
-- Full Erlang support !
-]
-]
-.pushdown[
-```elixir
-iex> :crypto.hash(:md5, "Using crypto from Erlang OTP")
-<<192, 223, 75, 115, ...>>
-```
+- Gère les requêtes synchrones et asynchrones
 ]
 ---
-class: center, middle, inverse
-.ima[![Dito](dito.png)]
+## GenServer
+.no-margin[
+.old[
+- Brique générique pour construire un serveur
+- Execute un callback quand il reçoit un message
+- Se démarre avec un état initial, qui sera passé à chaque callback
+- Gère les requêtes synchrones et asynchrones
+]
+- send/receive n'est plus à gérer
+]
 ---
-class: center, middle, inverse
-
-# Elixir basics
----
-## Numbers
-
+## GenServer
+.no-margin.old[
+- Brique générique pour construire un serveur
+- Execute un callback quand il reçoit un message
+- Se démarre avec un état initial, qui sera passé à chaque callback
+- Gère les requêtes synchrones et asynchrones
+- send/receive n'est plus à gérer
+]
 ```elixir
-4 = 2 + 2
-13 = 27 - 14
+defmodule Stack do
+  use GenServer
 
-150450405 = 35 * 4298583
-28 = 4 * ( 3 + 4 )
-26.846153846153847 = 349 / 13
-
-3 = div(30, 10)
-5 = rem(35, 10)
-```
----
-## Booleans
-```elixir
-false = false and true
-true  = true  and true
-
-true  = true  or false
-false = false or false
-
-# A non boolean argument results in an ArgumentError
-"hello" and true
-
-# || can be used to assign fallback/default values
-"default" = nil || "default"
-
-# short-circuted || result since left side being
-# true makes it true
-"first" = "first" || "second"
-
-"second" = "first" && "second"
-# short-circuted && result, left-side false value returned
-false = false && "second"
-```
----
-## Strings
-```elixir
-message = "Hello World !"
-IO.puts "The message is #{message}"
-
-"Hello World" = "Hello" <> " " <> "World"
-
-"HELLO WORLD!" = String.upcase("Hello World!")
-8 = String.length("Random !")
-
-["1", "2", "3"] = String.split("1,2,3" , ",")
-["1", "2"] = String.split("   1  \n \t   2 \n")
-
- "1,2,3" = Enum.join(["1","2","3"], ",")
-```
----
-## Atoms
-```elixir
-:hello
-false = :hello == :world
-
-true = true == :true
-true = is_atom(false)
-true = is_boolean(:false)
-
-{:ok, Result} = my_fun(arg)
-```
----
-## Tuples
-
-```elixir
-{}
-{1, :two, "three"}
-
-tuple = {1, :two, "three"}
-1 = elem(tuple, 0)
-"three" = elem(tuple, 2)
-
-0 = tuple_size({})
-3 = tuple_size({1, 2, 3})
-
-{val1, 2} = {1, 2}
-1 = val1
-```
----
-## Lists
-```elixir
-[1, 2, true, 3] = [1, 2, true, 3]
-3 = length [1, 2, 3]
-
-[1, 2, 3, 4, 5, 6] = [1, 2, 3] ++ [4, 5, 6]
-[1, 2, 3, true] = [1, true, 2, false, 3, true] -- [true, false]
-
-list = [1, 2, 3]
-1 = hd(list)
-[2, 3] = tl(list)
-
-hd [] #=> ** (ArgumentError) argument error
-
-[1,2,3] = [1 | [2,3]]
-```
----
-## Map
-```elixir
-%{}
-%{3 => "four", "one" => :two} =%{"one" => :two, 3 => "four"}
-
-map = %{a: 1, b: 2}
-{:ok, 1} = Map.fetch(map, :a)
-2 = map[:b]
-nil = map["non_existing_key"]
-
-
-map = %{foo: "bar", baz: "bong"}
-"bar" = map.foo
-map.non_existing_key
-#=> ** (KeyError) key :non_existing_key
-#      not found in: %{baz: "bong", foo: "bar"}
-
-%{} = %{foo: "bar"}
-%{a: a} = %{:a => 1, "b" => 2, [:c, :e, :e] => 3}
-1 = a
-%{:c => 3} = %{:a => 1, 2 => :b}
-#=> ** (MatchError) no match of right
-#      hand side value: %{2 => :b, :a => 1}
-```
----
-## Functions
-```elixir
-square = fn(x) -> x * x end
-
-# calling an anonymous function uses a period
-# before the parentheses
-4 = square.(2)
-
-
-# pattern matching the arguments can be used
-first = fn([head|rest]) -> head end
-1 = first.([1, 2])
-
-# anonymous functions are commonly used as arguments
-# to other functions
-[1, 4, 9] = Enum.map([1, 2, 3], square)
-[3, 4, 5] = Enum.map([1, 2, 3], fn(x) -> x + 2 end)
-```
----
-## Modules
-```elixir
-# functions are defined inside Modules
-defmodule Examples do
-
-  # basic defintion
-  def do_stuff( params ) do
-      "result"
+  # Callbacks
+  def handle_call(:pop, _from, [h | t]) do
+    {:reply, h, t}
   end
 
-  #shorthand syntax
-  def shorthand(), do: "result"
-
-  # defp is for private functions
-  defp private_method, do: "private"
-
-  # params can pattern match
-  def match_this(%{:key => value}), do: value
-
-  # the first matching function is called (order matters)
-  def test(test), do: "matches any param"
-  def test([]), do: "never matched"
-
-end
-```
----
-## Pipe operator
-```elixir
-foo(bar(baz(new_function()))) #=> 💩
-
-new_function() |> baz() |> bar() |> foo() #=> ♥️
-
-["Elixir", "rocks"] = "Elixir rocks" |> String.split()
-["ELIXIR", "ROCKS"] = "Elixir rocks" |>
-                         String.upcase() |>
-                         String.split()
-true = "elixir" |> String.ends_with?("ixir")
-```
----
-class: center, middle, inverse
-.ima[![Lama](lama.jpg)]
----
-class: center, middle, inverse
-
-# Concurrency
----
-## Shell itself is a process !!
-```elixir
-iex> self()
-#PID<0.82.0>
-```
----
-## Sending messages
-```elixir
-iex> send(self(), :foo)
-:foo
-iex> pid = self()
-#PID<0.82.0>
-iex> pid |> send(:bar)
-:bar
-```
----
-## Sending messages
-```elixir
-iex> send(self(), :foo)
-:foo
-iex> pid = self()
-#PID<0.82.0>
-iex> pid |> send(:bar)
-:bar
-```
-```elixir
-iex> flush()
-:foo
-:bar
-:ok
-iex> flush()
-:ok
-```
----
-## Receiving messages
-```elixir
-iex> send(self(), :test1)
-:test1
-iex> receive do
-...> x -> x
-...> end
-:test1
-```
----
-## Receiving messages
-```elixir
-iex> send(self(), :test1)
-:test1
-iex> receive do
-...> x -> x
-...> end
-:test1
-```
-```elixir
-iex> send(self(), 12)
-12
-iex> receive do
-...> y -> y * 2
-...> end
-24
-```
----
-## Spawning processes
-```elixir
-iex> spawn fn -> IO.puts "I'm a spawned process !!" end
-I'm a spawned process !!
-#PID<0.84.0>
-```
----
-## Spawning processes
-```elixir
-defmodule Bounce do
-  def report do
-    receive do
-      msg -> IO.puts("Received : #{msg}")
-    end
+  def handle_cast({:push, item}, state) do
+    {:noreply, [item | state]}
   end
 end
 ```
 ---
-## Spawning processes
+## GenServer
 ```elixir
-defmodule Bounce do
-  def report do
-    receive do
-      msg -> IO.puts("Received : #{msg}")
-    end
-  end
-end
-```
-```elixir
-iex> pid = spawn(Bounce, :report, [])
-#PID<0.85.0>
-iex> send(pid, "Secret")
-Received : Secret
-"Secret"
-```
----
-## Spawning processes
-```elixir
-defmodule Bounce do
-  def report do
-    receive do
-      msg -> IO.puts("Received : #{msg}")
-    end
-  end
-end
-```
-```elixir
-iex> pid = spawn(Bounce, :report, [])
-#PID<0.85.0>
-iex> send(pid, "Secret")
-Received : Secret
-"Secret"
-iex> send(pid, "Other secret")
-"Other secret"
-```
----
-## Spawning processes
-```elixir
-defmodule Bounce do
-  def report do
-    receive do
-      msg -> IO.puts("Received : #{msg}")
-    end
-    report
-  end
-end
-```
-```elixir
-iex> pid = spawn(Bounce, :report, [])
-#PID<0.86.0>
-iex> send(pid, "Secret")
-Received : Secret
-"Secret"
-iex> send(pid, "Other secret")
-Received : Other secret
-"Other secret"
-```
----
-### Distributed processes
-```bash
-*/home/bastien/test ∫ iex --cookie munchkin --sname serv
-Erlang/OTP 19 [erts-8.2] [source] [64-bit] [smp:8:8]
-[async-threads:10] [hipe] [kernel-poll:false]
+defmodule Stack do
+  use GenServer
 
-Interactive Elixir (1.6.0) - press Ctrl+C to exit
-(type h() ENTER for help)
-iex(serv@adomik-3-3)1>
-```
----
-### Distributed processes
-```bash
-/home/bastien/test ∫ iex --cookie munchkin --sname serv
-Erlang/OTP 19 [erts-8.2] [source] [64-bit] [smp:8:8]
-[async-threads:10] [hipe] [kernel-poll:false]
+  # Callbacks
+  def handle_call(:pop, _from, [h | t]) do
+    {:reply, h, t}
+  end
 
-Interactive Elixir (1.6.0) - press Ctrl+C to exit
-(type h() ENTER for help)
-iex(serv@adomik-3-3)1>
-```
-```elixir
-iex> Node.connect :"serv@adomik-3-3"
-true
-iex> Node.list
-[:"serv@adomik-3-3"]
-iex> Node.spawn_link :"serv@adomik-3-3", fn -> Hello.world end
-#PID<9014.59.0>
-hello world
-```
----
-### Distributed processes
-```elixir
-iex> pid = Node.spawn_link :"serv@adomik-3-3", fn ->
-...>   receive do
-...>     {:ping, client} -> send client, :pong
-...>   end
-...> end
-#PID<9014.59.0>
-iex> send pid, {:ping, self()}
-{:ping, #PID<0.73.0>}
-iex> flush()
-:pong
-:ok
+  def handle_cast({:push, item}, state) do
+    {:noreply, [item | state]}
+  end
+end
+
+{:ok, pid} = GenServer.start_link(Stack, [:hello])
+
+GenServer.call(pid, :pop)
+#=> :hello
+GenServer.cast(pid, {:push, :world})
+#=> :ok
+GenServer.call(pid, :pop)
+#=> :world
 ```
 ---
 class: center, middle, inverse
-
-# Let's build a chat app
+# Munchkin Reloaded
 ---
-class: center, middle, inverse
-
-## Munchkin
-![Munchkin](munchkin.jpg)
+## Rappel
 ---
-## Starting
-```bash
-$ > mix new munchkin
- * creating README.md
- * creating .formatter.exs
- * creating .gitignore
- * creating mix.exs
- * creating config
- * creating config/config.exs
- * creating lib
- * creating lib/munchkin.ex
- * creating test
- * creating test/test_helper.exs
- * creating test/munchkin_test.exs
-
-Your Mix project was created successfully.
-You can use "mix" to compile it, test it, and more:
-
-    cd munchkin
-    mix test
-
-Run "mix help" for more commands.
-```
+## Rappel
+.no-margin[
+- Un processus serveur
+]
 ---
-## Starting
-```elixir
-defmodule Munchkin do
-  @moduledoc """
-  Documentation for Munchkin.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Munchkin.hello
-      :world
-
-  """
-  def hello do
-    :world
-  end
-end
-```
+## Rappel
+.no-margin[
+.old[
+- Un processus serveur
+]
+- Un processus client
+]
 ---
-## Server side
+## Rappel
+.no-margin[
+.old[
+- Un processus serveur
+- Un processus client
+]
+- Utilisation massive de `send` et `receive`
+]
 ---
-## Server side
-```elixir
-  def server(clients) do
-    receive do
-      {:stop, reason} ->
-        IO.puts "Stopping server (#{reason})"
-    end
-  end
-```
+## Rappel
+.no-margin[
+.old[
+- Un processus serveur
+- Un processus client
+- Utilisation massive de `send` et `receive`
+]
+- Pas de tolérance aux erreurs
+]
 ---
-## Server side
-```elixir
-  def server(clients) do
-    receive do
-      {:login, name, pid} ->
-        new_clients = handle_login(name, pid, clients)
-        server(new_clients)
-      {:logout, name} ->
-        new_clients = handle_logout(name, clients)
-        server(new_clients)
-      {:stop, reason} ->
-        IO.puts "Stopping server (#{reason})"
-    end
-  end
-```
+## Rappel
+.no-margin[
+.old[
+- Un processus serveur
+- Un processus client
+- Utilisation massive de `send` et `receive`
+- Pas de tolérance aux erreurs
+]
+- Code dans un seul fichier
+]
 ---
-## Server side
+## Ce qui va changer
+---
+## Ce qui va changer
+.no-margin[
+- Séparation Client/Server en deux applications
+]
+---
+## Ce qui va changer
+.no-margin[
+.old[
+- Séparation Client/Server en deux applications
+]
+- Utilisation de GenServer pour le client et le serveur
+]
+---
+## Ce qui va changer
+.no-margin[
+.old[
+- Séparation Client/Server en deux applications
+- Utilisation de GenServer pour le client et le serveur
+]
+- Supervision des processus pour les relancer en cas de panne
+]
+---
+## Coté serveur
+### Code sans OTP
 ```elixir
   def server(clients) do
     receive do
@@ -1033,25 +573,8 @@ end
   end
 ```
 ---
-## Server side
-```elixir
-  def handle_message(from, target, message, clients) do
-    clients[target] |> send({:msg, from, message})
-  end
-```
----
-## Server side
-```elixir
-  def handle_message(from, target, message, clients) do
-    clients[target] |> send({:msg, from, message})
-  end
-
-  def handle_login(name, pid, clients) do
-    Map.put(clients, name, pid)
-  end
-```
----
-## Server side
+## Coté serveur
+### Code sans OTP
 ```elixir
   def handle_message(from, target, message, clients) do
     clients[target] |> send({:msg, from, message})
@@ -1066,7 +589,8 @@ end
   end
 ```
 ---
-## Server side
+## Coté serveur
+### Code sans OTP
 ```elixir
   def start_server do
     IO.puts "Starting server"
@@ -1076,16 +600,180 @@ end
   end
 ```
 ---
-## Client side
+class: middle, center, inverse
+# Utilisons donc GenServer !
 ---
-## Client side
+## Coté serveur
 ```elixir
-  def send_to_server(params) do
-    :global.whereis_name(:server) |> send(params)
+defmodule Munchkin.Server do
+  use GenServer
+  require Logger
+
+  def init(args) do
+    {:ok, args}
+  end
+
+  def start_link(options \\ []) do
+    {:ok, pid} = GenServer.start_link(__MODULE__, %{}, options)
+    :global.register_name(:server, pid)
+    {:ok, pid}
+  end
+end
+```
+---
+## Coté serveur
+### Login
+```elixir
+  def handle_call({:login, name}, {pid, _ref}, state) do
+    Logger.info fn -> "Received login with #{name}" end
+    {response, new_state} = login(state, name, pid)
+    {:reply, response, new_state}
+  end
+
+  defp login(state, name, from) do
+    case Map.fetch(state, name) do
+      {:ok, ^from} ->
+        {{:err, "Already logged in"}, state}
+      {:ok, _} ->
+        {{:err, "Name already taken"}, state}
+      _ ->
+        {:ok, Map.put(state, name, from)}
+    end
   end
 ```
 ---
-## Client side
+## Coté serveur
+### Logout
+```elixir
+  def handle_call({:logout, name}, _pid, state) do
+    Logger.info fn -> "Received logout with #{name}" end
+    {response, new_state} = logout(state, name)
+    {:reply, response, new_state}
+  end
+
+  defp logout(state, name) do
+    case Map.fetch(state, name) do
+      {:ok, _pid} ->
+        {:ok, Map.delete(state, name)}
+      _ ->
+        {{:err, "User not found"}, state}
+    end
+  end
+```
+---
+## Coté serveur
+### Rename
+```elixir
+  def handle_call({:rename, names}, {pid, _ref}, state) do
+    Logger.info fn -> "Received rename with #{names}" end
+    {response, new_state} = rename(names, pid, state)
+    {:reply, response, new_state}
+  end
+
+  defp rename({old, new}, pid, state) do
+    case Map.fetch(state, old) do
+      {:ok, ^pid} ->
+        new_state = Map.delete(state, old)
+        {:ok, Map.put(new_state, new, pid)}
+      {:ok, _} ->
+        {{:err, "Pid not corresponding"}, state}
+      _ ->
+        {{:err, "User not found"}, state}
+    end
+  end
+```
+---
+## Coté serveur
+### Tell
+```elixir
+  def handle_call({:tell, {from, to, message}}, _pid, state) do
+    Logger.info fn -> "Received tell from #{from}, to #{to}" end
+    response = tell(from, to, message, state)
+    {:reply, response, state}
+  end
+
+  defp tell(from, to, message, state) do
+    case Map.fetch(state, to) do
+      {:ok, pid} -> GenServer.cast(pid, {:msg, from, message})
+      _ -> {:err, "User not found"}
+    end
+  end
+```
+---
+## Coté serveur
+### Yell
+```elixir
+  def handle_cast({:yell, {from, pid, message}}, state) do
+    Logger.info fn -> "Received yell from #{from}" end
+    yell(message, {from, pid}, state)
+    {:noreply, state}
+  end
+
+  defp yell(message, {from, pid}, state) do
+    Enum.each(state, fn({_, to}) ->
+      if pid != to do
+        GenServer.cast(to, {:msg, from, message})
+      end
+    end)
+  end
+```
+---
+## Coté serveur
+### Supervision du serveur
+```elixir
+defmodule Munchkin.Supervisor do
+  use Supervisor
+
+  def init(_) do
+    children = [
+      worker(Munchkin.Server, [], restart: :permanent)
+    ]
+
+    supervise(children, strategy: :one_for_one)
+  end
+
+  def start_link do
+    Supervisor.start_link(__MODULE__, [], name: __MODULE__)
+  end
+end
+```
+---
+## Coté serveur
+### Inclusion dans une application
+```elixir
+defmodule Munchkin.Application do
+  use Application
+
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
+
+    children = [
+      supervisor(Munchkin.Supervisor, [])
+    ]
+
+    opts = [strategy: :one_for_one]
+    Supervisor.start_link(children, opts)
+  end
+end
+```
+---
+## Coté serveur
+### Lancement automatique de l'application
+`mix.exs`
+```elixir
+  def application do
+    [
+      extra_applications: [:logger],
+*     mod: {Munchkin.Application, []}
+    ]
+end
+```
+---
+class: center, middle, inverse
+# Petite démo !
+---
+## Coté client
+### Code sans OTP
 ```elixir
   def connect() do
     Node.connect(:"serv@adomik-3-3")
@@ -1095,18 +783,8 @@ end
   end
 ```
 ---
-## Client side
-```elixir
-  def client(:none) do
-    IO.puts "Starting client"
-    receive do
-      {:stop, reason} ->
-        IO.puts "Stopping (#{reason})"
-    end
-  end
-```
----
-## Client side
+## Coté client
+### Code sans OTP
 ```elixir
   def client(:none) do
     IO.puts "Starting client"
@@ -1121,46 +799,8 @@ end
   end
 ```
 ---
-## Client side
-```elixir
-  def client(name) do
-    receive do
-      {:stop, reason} ->
-        IO.puts "Stopping (#{reason})"
-    end
-  end
-```
----
-## Client side
-```elixir
-  def client(name) do
-    receive do
-      {:msg, from, message} ->
-        IO.puts "#{from} says : #{message}"
-        client(name)
-      {:stop, reason} ->
-        IO.puts "Stopping (#{reason})"
-    end
-  end
-```
----
-## Client side
-```elixir
-  def client(name) do
-    receive do
-      {:msg, from, message} ->
-        IO.puts "#{from} says : #{message}"
-        client(name)
-      {:tell, to, message} ->
-        send_to_server({:msg, name, to, message})
-        client(name)
-      {:stop, reason} ->
-        IO.puts "Stopping (#{reason})"
-    end
-  end
-```
----
-## Client side
+## Coté client
+### Code sans OTP
 ```elixir
   def client(name) do
     receive do
@@ -1180,28 +820,8 @@ end
   end
 ```
 ---
-## Client side
-```elixir
-  def login(name) do
-    Process.whereis(Munchkin.Client) |> send({:login, name})
-    :ok
-  end
-```
----
-## Client side
-```elixir
-  def login(name) do
-    Process.whereis(Munchkin.Client) |> send({:login, name})
-    :ok
-  end
-
-  def logout() do
-    Process.whereis(Munchkin.Client) |> send({:logout})
-    :ok
-  end
-```
----
-## Client side
+## Coté client
+### Code sans OTP
 ```elixir
   def login(name) do
     Process.whereis(Munchkin.Client) |> send({:login, name})
@@ -1221,23 +841,186 @@ end
 ```
 ---
 class: center, middle, inverse
+# Utilisons donc GenServer aussi !
+---
+## Coté client
+```elixir
+defmodule MunchkinClient.Server do
+  use GenServer
+
+  def init(args) do
+    Node.connect(:"server@adomik-3-3")
+    {:ok, args}
+  end
+
+  def start_link(options \\ []) do
+    {:ok, pid} = GenServer.start_link(__MODULE__, :none,
+                                                  options)
+    Process.register pid, Munchkin.Client
+    {:ok, pid}
+  end
+
+  defp server_pid do
+    :global.whereis_name(:server)
+  end
+end
+```
+---
+## Coté client
+### Login
+```elixir
+  def handle_call({:login, name} = params, _pid, :none) do
+    case server_pid() |> GenServer.call(params) do
+      :ok -> {:reply, :ok, name}
+      error -> {:reply, error, :none}
+    end
+  end
+
+  def handle_call(_, _pid, :none) do
+    {:reply, {:err, "Not logged in"}, :none}
+  end
+```
+---
+## Coté client
+### Logout
+```elixir
+  def handle_call({:logout}, _pid, name) do
+    case server_pid() |> GenServer.call({:logout, name}) do
+      :ok -> {:reply, :ok, :none}
+      error -> {:reply, error, name}
+    end
+  end
+```
+---
+## Coté client
+### Rename
+```elixir
+  def handle_call({:rename, name}, _pid, name) do
+    {:reply, {:err, "Already named #{name}"}, name}
+  end
+
+  def handle_call({:rename, name}, _pid, old_name) do
+    case server_pid() |> GenServer.call({:rename, 
+                                      {old_name, name}}) do
+      :ok -> {:reply, :ok, name}
+      {:err, reason} -> {:reply, {:err, reason}, old_name}
+    end
+  end
+```
+---
+## Coté client
+### Tell
+```elixir
+  def handle_call({:tell, to, message}, _pid, name) do
+    response = server_pid() |> GenServer.call(
+                                 {:tell, {name, to, message}})
+    {:reply, response, name}
+  end
+```
+---
+## Coté client
+### Yell
+```elixir
+  def handle_call({:yell, message}, _pid, name) do
+    response = server_pid() |> GenServer.cast(
+                              {:yell, {name, self(), message}})
+    {:reply, response, name}
+  end
+```
+---
+## Coté client
+### Reception des messages
+```elixir
+  def handle_cast({:msg, from, message}, name) do
+    IO.puts "[#{from}]: #{message}"
+    {:noreply, name}
+  end
+```
+---
+## Coté client
+### API
+```elixir
+defmodule Client do
+  def login(name) do
+    GenServer.call(Munchkin.Client, {:login, name})
+  end
+
+  def logout do
+    GenServer.call(Munchkin.Client, {:logout})
+  end
+
+  def tell(to, message) do
+    GenServer.call(Munchkin.Client, {:tell, to, message})
+  end
+
+  def yell(message) do
+    GenServer.call(Munchkin.Client, {:yell, message})
+  end
+
+  def rename(name) do
+    GenServer.call(Munchkin.Client, {:rename, name})
+  end
+end
+```
+---
+## Coté client
+```elixir
+defmodule MunchkinClient.Supervisor do
+  use Supervisor
+
+  def init(_) do
+    children = [
+      worker(MunchkinClient.Server, [], restart: :permanent)
+    ]
+
+    supervise(children, strategy: :one_for_one)
+  end
+
+  def start_link do
+    Supervisor.start_link(__MODULE__, [], name: __MODULE__)
+  end
+end
+```
+---
+## Coté client
+```elixir
+defmodule MunchkinClient.Application do
+  use Application
+
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
+
+    children = [
+      supervisor(MunchkinClient.Supervisor, [])
+    ]
+
+    opts = [strategy: :one_for_one]
+    Supervisor.start_link(children, opts)
+  end
+end
+```
+---
+## Coté client
+### Lancement automatique de l'application
+`mix.exs`
+```elixir
+  def application do
+    [
+      extra_applications: [:logger],
+*     mod: {MunchkinClient.Application, []}
+    ]
+end
+```
+---
+class: center, middle, inverse
 # Demo time !
-![Demo](demo.jpg)
 ---
 class: center, middle, inverse
-
 # Live programming
-### (Maybe skipped)
-.ima[![Doge](doge.jpg)]
 ---
 class: center, middle, inverse
 
-# Questions ?
-### I don't want to answer but I'll force myself
----
-class: center, middle, inverse
-# More images
-![Capybara](capybara.png)
+# Des questions ? Des remarques ?
 ---
 class: center, middle, inverse
 
