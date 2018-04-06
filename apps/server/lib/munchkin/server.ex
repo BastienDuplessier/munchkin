@@ -1,7 +1,9 @@
 defmodule Munchkin.Server do
   use GenServer
+  require Logger
 
   def init(args) do
+    Logger.info fn -> "Starting server" end
     {:ok, args}
   end
 
@@ -12,30 +14,36 @@ defmodule Munchkin.Server do
   end
 
   def handle_call({:login, name}, {pid, _ref}, state) do
+    Logger.info fn -> "Received login with #{name}" end
     {response, new_state} = login(state, name, pid)
     {:reply, response, new_state}
   end
 
   def handle_call({:logout, name}, _pid, state) do
+    Logger.info fn -> "Received logout with #{name}" end
     {response, new_state} = logout(state, name)
     {:reply, response, new_state}
   end
 
   def handle_call({:tell, {from, to, message}}, _pid, state) do
+    Logger.info fn -> "Received tell from #{from}, to #{to}" end
     response = tell(from, to, message, state)
     {:reply, response, state}
   end
 
   def handle_call({:rename, names}, {pid, _ref}, state) do
+    Logger.info fn -> "Received rename with #{names}" end
     {response, new_state} = rename(names, pid, state)
     {:reply, response, new_state}
   end
 
   def handle_call(_, _, state) do
+    Logger.info fn -> "Received unprocessable request" end
     {:reply, {:err, "not found"}, state}
   end
 
   def handle_cast({:yell, {from, pid, message}}, state) do
+    Logger.info fn -> "Received yell from #{from}" end
     yell(message, {from, pid}, state)
     {:noreply, state}
   end
